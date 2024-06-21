@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+  <div class="container mx-auto mt-10 p-4 sm:p-8">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h1 class="text-2xl font-bold mb-4">My Todo List</h1>
+
+      <!-- Tabs -->
+      <div class="flex mb-4">
+        <button id="todos-tab" class="px-4 py-2 bg-blue-500 text-white rounded-l-lg">Todos</button>
+        <button id="completed-tab" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-r-lg">Completed</button>
+      </div>
+
+      <!-- Todo List -->
+      <div id="todos-section">
+        <ul id="todo-list" class="list-disc list-inside mb-4">
+          <!-- Todos will be added here -->
+        </ul>
+        <input type="text" id="new-todo" class="border p-2 w-full mb-2" placeholder="Add a new todo">
+        <button id="add-todo" class="px-4 py-2 bg-green-500 text-white">Add Todo</button>
+      </div>
+
+      <!-- Completed List -->
+      <div id="completed-section" class="hidden">
+        <ul id="completed-list" class="list-disc list-inside">
+          <!-- Completed todos will be added here -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('todos-tab').addEventListener('click', function() {
+      document.getElementById('todos-section').classList.remove('hidden');
+      document.getElementById('completed-section').classList.add('hidden');
+      this.classList.add('bg-blue-500', 'text-white');
+      this.classList.remove('bg-gray-300', 'text-gray-800');
+      document.getElementById('completed-tab').classList.add('bg-gray-300', 'text-gray-800');
+      document.getElementById('completed-tab').classList.remove('bg-blue-500', 'text-white');
+    });
+
+    document.getElementById('completed-tab').addEventListener('click', function() {
+      document.getElementById('todos-section').classList.add('hidden');
+      document.getElementById('completed-section').classList.remove('hidden');
+      this.classList.add('bg-blue-500', 'text-white');
+      this.classList.remove('bg-gray-300', 'text-gray-800');
+      document.getElementById('todos-tab').classList.add('bg-gray-300', 'text-gray-800');
+      document.getElementById('todos-tab').classList.remove('bg-blue-500', 'text-white');
+    });
+
+    function createTodoItem(todoText) {
+      const todoItem = document.createElement('li');
+      todoItem.classList.add('flex', 'justify-between', 'border', 'p-2', 'my-2', 'list-none');
+
+      const todoTextElement = document.createElement('span');
+      todoTextElement.textContent = todoText;
+      todoItem.appendChild(todoTextElement);
+
+      const completeButton = document.createElement('button');
+      completeButton.textContent = 'Complete';
+      completeButton.classList.add('bg-blue-500', 'text-white', 'px-2', 'py-1', 'ml-2', 'rounded');
+      completeButton.addEventListener('click', function() {
+        todoItem.remove();
+        const completedItem = document.createElement('li');
+        completedItem.textContent = todoText;
+        completedItem.classList.add('border', 'p-2', 'my-2', 'list-none');
+        document.getElementById('completed-list').appendChild(completedItem);
+      });
+
+      todoItem.appendChild(completeButton);
+      return todoItem;
+    }
+
+    document.getElementById('add-todo').addEventListener('click', function() {
+      const todoText = document.getElementById('new-todo').value;
+      if (todoText) {
+        const todoItem = createTodoItem(todoText);
+        document.getElementById('todo-list').appendChild(todoItem);
+        document.getElementById('new-todo').value = '';
+      }
+});
+  </script>
+</body>
+</html>
