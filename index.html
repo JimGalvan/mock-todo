@@ -6,7 +6,7 @@
   <title>Todo List</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white">
 
   <div class="container mx-auto mt-10 p-4 sm:p-8">
         <div class="bg-white p-6 rounded-lg shadow-lg">
@@ -55,26 +55,25 @@
       document.getElementById('todos-tab').classList.remove('bg-blue-500', 'text-white');
     });
 
-    function createTodoItem(todoText) {
+    function createTodoItem(todoText, completed = false) {
       const todoItem = document.createElement('li');
-      todoItem.classList.add('flex', 'justify-between', 'border', 'p-2', 'my-2', 'list-none');
+      todoItem.classList.add('flex', 'justify-between', 'border', 'p-2', 'my-2', 'list-none', 'dark:border-gray-600');
 
       const todoTextElement = document.createElement('span');
       todoTextElement.textContent = todoText;
       todoItem.appendChild(todoTextElement);
 
-      const completeButton = document.createElement('button');
-      completeButton.textContent = 'Complete';
-      completeButton.classList.add('bg-blue-500', 'text-white', 'px-2', 'py-1', 'ml-2', 'rounded');
-      completeButton.addEventListener('click', function() {
+      const actionButton = document.createElement('button');
+      actionButton.textContent = completed ? 'Uncomplete' : 'Complete';
+      actionButton.classList.add('px-2', 'py-1', 'ml-2', 'rounded', 'dark:bg-blue-400');
+      actionButton.classList.add(completed ? 'bg-yellow-500' : 'bg-blue-500', 'text-white');
+      actionButton.addEventListener('click', function() {
         todoItem.remove();
-        const completedItem = document.createElement('li');
-        completedItem.textContent = todoText;
-        completedItem.classList.add('border', 'p-2', 'my-2', 'list-none');
-        document.getElementById('completed-list').appendChild(completedItem);
+        const newTodoItem = createTodoItem(todoText, !completed);
+        document.getElementById(completed ? 'todo-list' : 'completed-list').appendChild(newTodoItem);
       });
 
-      todoItem.appendChild(completeButton);
+      todoItem.appendChild(actionButton);
       return todoItem;
     }
 
