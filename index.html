@@ -56,26 +56,49 @@
     });
 
     function createTodoItem(todoText, completed = false) {
-      const todoItem = document.createElement('li');
-      todoItem.classList.add('flex', 'justify-between', 'border', 'p-2', 'my-2', 'list-none', 'dark:border-gray-600');
+  const todoItem = document.createElement('li');
+  todoItem.classList.add('flex', 'justify-between', 'border', 'p-2', 'my-2', 'list-none', 'dark:border-gray-600');
 
-      const todoTextElement = document.createElement('span');
-      todoTextElement.textContent = todoText;
-      todoItem.appendChild(todoTextElement);
+  const actionButton = document.createElement('button');
+  actionButton.textContent = completed ? 'Uncomplete' : 'Complete';
+  actionButton.classList.add('px-2', 'py-1', 'ml-2', 'rounded', 'dark:bg-blue-400');
+  actionButton.classList.add(completed ? 'bg-yellow-500' : 'bg-blue-500', 'text-white');
+  actionButton.addEventListener('click', function() {
+    todoItem.remove();
+    const newTodoItem = createTodoItem(todoText, !completed);
+    document.getElementById(completed ? 'todo-list' : 'completed-list').appendChild(newTodoItem);
+  });
 
-      const actionButton = document.createElement('button');
-      actionButton.textContent = completed ? 'Uncomplete' : 'Complete';
-      actionButton.classList.add('px-2', 'py-1', 'ml-2', 'rounded', 'dark:bg-blue-400');
-      actionButton.classList.add(completed ? 'bg-yellow-500' : 'bg-blue-500', 'text-white');
-      actionButton.addEventListener('click', function() {
+  todoItem.appendChild(actionButton);
+
+  const todoTextElement = document.createElement('span');
+  todoTextElement.textContent = todoText;
+  todoItem.appendChild(todoTextElement);
+
+  todoItem.appendChild(actionButton);
+
+  let pressTimer;
+  todoItem.addEventListener('mousedown', startTimer);
+  todoItem.addEventListener('touchstart', startTimer);
+
+  todoItem.addEventListener('mouseup', stopTimer);
+  todoItem.addEventListener('touchend', stopTimer);
+
+  function startTimer() {
+    pressTimer = window.setTimeout(function() {
+      const confirmDelete = window.confirm('Do you want to delete this item?');
+      if (confirmDelete) {
         todoItem.remove();
-        const newTodoItem = createTodoItem(todoText, !completed);
-        document.getElementById(completed ? 'todo-list' : 'completed-list').appendChild(newTodoItem);
-      });
+      }
+    }, 1000);
+  }
 
-      todoItem.appendChild(actionButton);
-      return todoItem;
-    }
+  function stopTimer() {
+    clearTimeout(pressTimer);
+  }
+
+  return todoItem;
+}
 
     document.getElementById('add-todo').addEventListener('click', function() {
       const todoText = document.getElementById('new-todo').value;
